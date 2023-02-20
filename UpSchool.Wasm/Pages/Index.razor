@@ -1,0 +1,69 @@
+﻿@page "/"
+@using UpSchool.Domain.Dtos
+@using UpSchool.Domain.Utilities
+
+<PageTitle>Index</PageTitle>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <div class="card-title text-center">
+            <h2 class="text-info">UpStorage Password Generator</h2>
+        <p>Create secure password with our Password Generator</p>
+        </div>
+
+        <div class="mt-2 text-center">
+
+                <input @bind="hasNumbers" class="form-check-input" type="checkbox" value="hasNumbers" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckChecked">
+                    Include numbers
+                </label>          
+
+                <input @bind="hasLowercase" class="form-check-input" type="checkbox" value="hasLowercase" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckChecked">
+                    Include lowercase
+                </label>
+                <input @bind="hasUppercase" class="form-check-input" type="checkbox" value="hasUppercase" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckChecked">
+                    Include uppercase
+                </label>
+                <input @bind="hasSpecial" class="form-check-input" type="checkbox" value="hasSpecial" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckChecked">
+                    Include special
+                </label>
+
+            <input type="range" class="form-range" id="customRange1" min="6" max="40" step="1" @onchange="GeneratePassword">
+            <p>@Password</p>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+@code{
+    public GeneratePasswordDto GeneratePasswordDto = new();
+    public PasswordGenerator PasswordGenerator = new();
+    public string Password { get; set; } = string.Empty;
+    public bool hasNumbers = false;
+    public bool hasLowercase = false;
+    public bool hasUppercase = false;
+    public bool hasSpecial = false;
+
+    private void GeneratePassword(ChangeEventArgs args)
+    {   
+        GeneratePasswordDto.IncludeNumbers = hasNumbers;
+        GeneratePasswordDto.IncludeLowercaseCharacters = hasLowercase;
+        GeneratePasswordDto.IncludeUppercaseCharacters = hasUppercase;
+        GeneratePasswordDto.IncludeSpecialCharacters = hasSpecial;
+        GeneratePasswordDto.Length = Convert.ToInt32(args.Value);
+        Password = PasswordGenerator.Generate(GeneratePasswordDto);
+    }
+}
+
+
+<style>
+    body {
+        background: #393E46
+    }
+</style>
