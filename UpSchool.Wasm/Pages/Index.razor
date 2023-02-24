@@ -1,8 +1,48 @@
 ﻿@page "/"
 @using UpSchool.Domain.Dtos
 @using UpSchool.Domain.Utilities
+@inject IJSRuntime JsRuntime
 
 <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-3">
+          
+                <div class="card-header">
+                    <div class="card-title text-center">
+                        <h2 class="text-info">
+                            Password Generator
+                        </h2>
+                        <p>Create secure passwords witch our Password Generator</p> 
+                    </div>
+
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-9">
+                            <p>@password</p>
+                        </div>
+                        <div class="col-md-1">
+                            <span @onclick="æ((args)=>copyToClipboardAsync)" class="oi oi-folder clickable" aria-hidden="true"></span>
+                        </div>
+
+                        <div class="col-md-1">
+                            <span class="o io-document clickable" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-md-1">
+                            <span @onclick=@GeneratePassword class="oi oi-loop-circular clickable" aria-hidden="true"></span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr  class=@CssColourClass style="height: 2vh !important;"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -11,7 +51,6 @@
                     <div class="mt-2 text-center">
                         <label>
                             Password Length <span class="badge bg-danger">@generatePasswordDto.Length</span>
-                            <p>@password</p>
                         </label>
 
                         <input class="form-range" type="range"
@@ -60,7 +99,11 @@
 
     public GeneratePasswordDto generatePasswordDto = new GeneratePasswordDto();
 
+    public string CssColourClass = "bg-danger";
+
     public string password = string.Empty;
+
+    override 
 
     private void CheckboxOnChange(ChangeEventArgs args, string checkBoxName)
     {
@@ -91,11 +134,47 @@
         password = passwordGenerator.Generate(generatePasswordDto);
     }
 
+    protected override void OnInitialized()
+    {
+        GeneratePassword();
+        base.OnInitialized();
+    }
+
+    private GeneratePassword()
+    {
+        password = PasswordGenerator.Generate(generatePasswordDto);
+    }
+
+    private ValueTask copyToClipboardAsync()
+    {
+        JsRuntime.InvokeVoidAsync("");
+    }
+
     private void OnInputChange(ChangeEventArgs args)
     {
+
         generatePasswordDto.Length = Convert.ToInt32(args.Value);
 
         password = passwordGenerator.Generate(generatePasswordDto);
+
+        switch (generatePasswordDto.Length)
+        {
+            case var value when(value>= 6 && value <=12):
+                CssColourClass = "bg-danger";
+                break;
+
+            case var value when(value > 12 && value<=19):
+                CssColourClass = "bg-warning";
+                break;
+
+            case var value when(value>19 && value<=40):
+                CssColourClass = "bg-success";
+                break;
+
+        default:
+            throw new Exception("Beklenmedik bir password uzunluğu geldi");
+            break;
+        }
     }
 }
 
