@@ -1,4 +1,5 @@
-﻿using Blazored.Toast.Services;
+﻿using Blazored.Toast.Configuration;
+using Blazored.Toast.Services;
 using UpSchool.Domain.Services;
 
 namespace UpSchool.Wasm.Services
@@ -13,10 +14,14 @@ namespace UpSchool.Wasm.Services
             _toastService = toastService;
         }
 
+        public void ShowError(string message)
+        {
+            _toastService.ShowError(message);
+        }
 
         public void ShowSuccess(string message)
         {
-            _toastService.ShowSuccess(message);
+            _toastService.ShowSuccess(message, x=> x.Position = ToastPosition.BottomCenter);
         }
     }
 }

@@ -9,15 +9,23 @@ using UpSchool.Wasm;
 using UpSchool.Wasm.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
 var titanicFluteApiUrl = builder.Configuration.GetConnectionString("TitanicFlute");
+
+var apiUrl = builder.Configuration.GetSection("ApiUrl").Value!;
+
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiUrl) });
 
 builder.Services.AddBlazoredToast();
-builder.Services.AddScoped<IToasterService, ToasterService>();
-builder.Services.AddSingleton<IUrlHelperService>(new UrlHelperService(titanicFluteApiUrl));
+
+builder.Services.AddScoped<IToasterService, BlazoredToastService>();
+
+//builder.Services.AddSingleton(typeof(LoggerBase));
+
+//builder.Services.AddSingleton<IUrlHelperService>(new UrlHelperService(titanicFluteApiUrl));
 
 builder.Services.AddBlazoredLocalStorage(config =>
 {

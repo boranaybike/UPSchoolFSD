@@ -1,6 +1,5 @@
 ﻿using UpSchool.Domain.Common;
 using UpSchool.Domain.Services;
-using UpSchool.Wasm.Services;
 
 namespace UpSchool.Wasm.Common.Utilities
 {
