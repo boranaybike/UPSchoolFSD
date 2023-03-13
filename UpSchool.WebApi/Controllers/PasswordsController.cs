@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using UpSchool.Domain.Dtos;
 using UpSchool.Domain.Utilities;
 
@@ -28,9 +27,9 @@ namespace UpSchool.WebApi.Controllers
         [HttpGet]
         public IActionResult GetPasswords()
         {
-
             return Ok(_passwords);
         }
+
         [HttpPost]
         public IActionResult Add(PasswordAddRequest addRequest)
         {
@@ -39,13 +38,13 @@ namespace UpSchool.WebApi.Controllers
 
             _passwords.Add(addRequest.Password);
 
-            return NoContent(); ;
+            return NoContent();
         }
 
         [HttpDelete("{password}")]
         public IActionResult Delete(string password)
         {
-            if (_passwords.Any(p => p == password))
+            if (!_passwords.Any(p => p == password))
                 return BadRequest("The given password was not found.");
 
             _passwords.Remove(password);
